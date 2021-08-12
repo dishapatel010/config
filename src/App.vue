@@ -381,7 +381,7 @@
           <b-col lg="4">
             <b-form-group
               id="category-language-group"
-              label="Folder Language"
+              label="Language"
               label-for="category-language-input"
             >
               <b-form-input

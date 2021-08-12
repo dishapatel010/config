@@ -112,7 +112,7 @@ module.exports = {
   },
 
   get ui_config() {
-    var config = JSON.parse(window.sessionStorage.getItem("ui_config")) || {};
+    var config = JSON.parse(window.sessionStorage.getItem("ui_config") || "{}");
     if (!config.custom_button) {
       config.custom_button = {};
     }
