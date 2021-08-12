@@ -84,7 +84,7 @@
             >
               <b-form-input
                 id="authorization-endpoint-input"
-                v-model="form.authEndpoint"
+                v-model="form.auth_endpoint"
                 type="text"
                 :disabled="true"
               ></b-form-input>
@@ -98,7 +98,7 @@
             >
               <b-form-input
                 id="token-endpoint-input"
-                v-model="form.tokenEndpoint"
+                v-model="form.token_endpoint"
                 type="text"
                 :disabled="true"
               ></b-form-input>
@@ -115,7 +115,7 @@
             >
               <b-form-input
                 id="redirect-uri-input"
-                v-model="form.redirectUri"
+                v-model="form.redirect_uri"
                 type="text"
                 :disabled="true"
               ></b-form-input>
@@ -161,7 +161,7 @@
             >
               <b-form-input
                 id="custom-parameters-input"
-                v-model="form.customParameters"
+                v-model="form.custom_parameters"
                 type="text"
                 placeholder=""
                 :disabled="true"
@@ -180,12 +180,12 @@
               <b-input-group>
                 <b-form-input
                   id="authorization-code-input"
-                  v-model="form.authCode"
+                  v-model="form.auth_code"
                   type="text"
                   :disabled="true"
                 ></b-form-input>
                 <b-input-group-append>
-                  <b-button variant="primary" v-clipboard:copy="form.authCode"
+                  <b-button variant="primary" v-clipboard:copy="form.auth_code"
                     >Copy</b-button
                   >
                 </b-input-group-append>
@@ -245,7 +245,7 @@
 
         <b-row>
           <b-col>
-            <b-button variant="primary" @click="getAuthCode">
+            <b-button variant="primary" @click="getauth_code">
               Get Credentials
               <b-spinner small v-if="workflow.showSpinner" />
             </b-button>
@@ -255,7 +255,10 @@
     </b-form>
 
     <div v-if="isAccounts">
-      <div v-for="(account, index) in form.account_list" v-bind:key="account">
+      <div
+        v-for="(account, index) in form.account_list"
+        :key="'account-' + index"
+      >
         <b-card-title :title="'Account ' + index"></b-card-title>
         <b-row v-if="isAccounts">
           <b-col lg="6">
@@ -339,7 +342,7 @@
     <div v-if="isCategories">
       <div
         v-for="(category, index) in form.category_list"
-        v-bind:key="category"
+        :key="'category-' + index"
       >
         <b-card-title :title="'Category ' + index"></b-card-title>
         <b-row>
@@ -382,7 +385,7 @@
               label-for="category-language-input"
             >
               <b-form-input
-                id="category-id-input"
+                id="category-language-input"
                 v-model="form.category_list[index].language"
                 type="text"
               ></b-form-input>
@@ -414,32 +417,15 @@
               </b-dropdown>
             </b-form-group>
           </b-col>
-          <b-col lg="1">
-            <b-form-group
-              id="category-anilist-group"
-              label="Anilist"
-              label-for="category-anilist-input"
+          <b-col lg="1" class="switch-css">
+            <b-form-checkbox
+              v-model="form.category_list[index].anilist"
+              name="category-anilist-switch"
+              size="lg"
+              switch
             >
-              <b-dropdown
-                variant="primary"
-                :text="form.category_list[index].anilist.toString()"
-                id="category-anilist-input"
-                v-model="form.category_list[index].anilist"
-              >
-                <b-dropdown-item disabled value="false"
-                  >Do you want to enable anilist for this
-                  category</b-dropdown-item
-                >
-                <b-dropdown-item
-                  v-for="option in [true, false]"
-                  :key="option"
-                  :value="option"
-                  @click="form.category_list[index].anilist = option"
-                >
-                  {{ option }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </b-form-group>
+              Anilist
+            </b-form-checkbox>
           </b-col>
         </b-row>
       </div>
@@ -488,21 +474,57 @@
             </b-input-group>
           </b-form-group>
         </b-col>
+      </b-row>
+      <b-row>
         <b-col>
           <b-form-group
-            id="range-group"
-            label="Range"
-            label-for="range-input"
+            id="custom-button-text-group"
+            label="Custom Button Text"
+            label-for="custom-button-text-input"
           >
+            <b-input-group>
+              <b-form-input
+                id="custom-button-text-input"
+                v-model="form.ui_config.custom_button.text"
+                type="text"
+              ></b-form-input>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-form-group
+            id="custom-button-url-group"
+            label="Custom Button URL"
+            label-for="custom-button-url-input"
+          >
+            <b-input-group>
+              <b-form-input
+                id="custom-button-url-input"
+                v-model="form.ui_config.custom_button.url"
+                type="text"
+              ></b-form-input>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <b-form-group id="range-group" label="Range" label-for="range-input">
             <b-input-group>
               <b-form-input
                 id="range-input"
                 v-model="form.ui_config.range"
-                value="16"
                 type="number"
               ></b-form-input>
             </b-input-group>
           </b-form-group>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox
+            v-model="form.ui_config.icon_on_nav"
+            name="icon-on-nav-switch"
+            switch
+          >
+            Icon On Nav
+          </b-form-checkbox>
         </b-col>
       </b-row>
     </div>
@@ -542,9 +564,7 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-    </b-row>
-    <b-row v-if="isExtras">
-      <b-col lg="4">
+      <b-col>
         <b-form-group
           id="cloudflare-group"
           label="Cloudflare"
@@ -559,7 +579,9 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-      <b-col lg="3">
+    </b-row>
+    <b-row v-if="isExtras">
+      <b-col lg="2">
         <b-form-group id="arcio-group" label="Arc.io" label-for="arcio-input">
           <b-input-group>
             <b-form-input
@@ -568,6 +590,30 @@
               type="text"
             ></b-form-input>
           </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col lg="3">
+        <b-form-group
+          id="language-group"
+          label="Language"
+          label-for="language-input"
+        >
+          <b-input-group>
+            <b-form-input
+              id="language-input"
+              v-model="form.language"
+              type="text"
+            ></b-form-input>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col lg="3">
+        <b-form-group id="service-accounts-group" label="Service Accounts">
+          <b-form-file
+            ref="file-input"
+            id="service-accounts-input"
+            @change="sa_zip_file"
+          ></b-form-file>
         </b-form-group>
       </b-col>
       <b-col lg="2">
@@ -585,124 +631,6 @@
               :state="form.build_interval > 0 ? null : false"
             ></b-form-input>
           </b-input-group>
-        </b-form-group>
-      </b-col>
-      <b-col lg="3">
-        <b-form-group id="service-accounts-group" label="Service Accounts">
-          <b-form-file
-            ref="file-input"
-            id="service-accounts-input"
-            @change="sa_zip_file"
-          ></b-form-file>
-        </b-form-group>
-      </b-col>
-    </b-row>
-
-    <b-row v-if="isExtras">
-      <b-col>
-        <b-form-group
-          id="transcoded-group"
-          label="Transcoded"
-          label-for="transcoded-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.transcoded"
-            id="transcoded-input"
-            v-model="form.transcoded"
-          >
-            <b-dropdown-item disabled value="False"
-              >Select whether pre-transcoded videos should be
-              used</b-dropdown-item
-            >
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.transcoded = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
-      </b-col>
-      <b-col>
-        <b-form-group
-          id="subtitles-group"
-          label="Subtitles"
-          label-for="subtitles-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.subtitles"
-            id="subtitles-input"
-            v-model="form.subtitles"
-          >
-            <b-dropdown-item disabled value="False"
-              >Select whether subtitles should be scanned from Google Drive
-              folders</b-dropdown-item
-            >
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.subtitles = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
-      </b-col>
-      <b-col>
-        <b-form-group
-          id="signup-group"
-          label="Sign Up"
-          label-for="signup-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.signup"
-            id="signup-input"
-            v-model="form.signup"
-          >
-            <b-dropdown-item disabled value="False"
-              >Select whether user sign up should be enabled</b-dropdown-item
-            >
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.signup = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
-      </b-col>
-      <b-col>
-        <b-form-group
-          id="auth-group"
-          label="Authentication"
-          label-for="auth-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.auth"
-            id="auth-input"
-            v-model="form.auth"
-          >
-            <b-dropdown-item disabled value="False"
-              >Select whether authentication should be enabled</b-dropdown-item
-            >
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.auth = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
         </b-form-group>
       </b-col>
       <b-col>
@@ -731,66 +659,68 @@
           </b-dropdown>
         </b-form-group>
       </b-col>
-      <b-col>
-        <b-form-group
-          id="prefer-mkv-group"
-          label="Prefer MKV"
-          label-for="prefer-mkv-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.prefer_mkv"
-            id="prefer-mkv-input"
-            v-model="form.prefer_mkv"
-          >
-            <b-dropdown-item disabled value="False"
-              >Select whether libDrive should prefer MKV videos over other
-              formats in the quality list</b-dropdown-item
-            >
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.prefer_mkv = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
-      </b-col>
-      <b-col>
-        <b-form-group
-          id="prefer-mp4-group"
-          label="Prefer MP4"
-          label-for="prefer-mp4-input"
-        >
-          <b-dropdown
-            variant="primary"
-            :text="form.prefer_mp4"
-            id="prefer-mp4-input"
-            v-model="form.prefer_mp4"
-          >
-            <b-dropdown-item disabled value="True">
-              Select whether libDrive should prefer MP4 videos over other
-              formats in the quality list
-            </b-dropdown-item>
-            <b-dropdown-item
-              v-for="option in ['True', 'False']"
-              :key="option"
-              :value="option"
-              @click="form.prefer_mp4 = option"
-            >
-              {{ option }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
-      </b-col>
     </b-row>
+
+    <div v-if="isExtras">
+      <b-row>
+        <b-col class="switch-css">
+          <b-form-checkbox
+            v-model="form.transcoded"
+            name="transcoded-switch"
+            switch
+          >
+            Transcoded
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox
+            v-model="form.subtitles"
+            name="subtitles-switch"
+            switch
+          >
+            Subtitles
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox v-model="form.signup" name="signup-switch" switch>
+            Sign Up
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox v-model="form.adult" name="adult-switch" switch>
+            Adult
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox v-model="form.auth" name="auth-switch" switch>
+            Authentication
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox
+            v-model="form.prefer_mkv"
+            name="prefer-mkv-switch"
+            switch
+          >
+            Prefer MKV
+          </b-form-checkbox>
+        </b-col>
+        <b-col class="switch-css">
+          <b-form-checkbox
+            v-model="form.prefer_mp4"
+            name="prefer-mp4-switch"
+            switch
+          >
+            Prefer MP4
+          </b-form-checkbox>
+        </b-col>
+      </b-row>
+    </div>
 
     <b-row v-if="isGenerate">
       <b-form-textarea
         id="textarea"
-        v-model="form.configBox"
+        v-model="form.config_box"
         spellcheck="false"
         placeholder=""
         rows="18"
@@ -819,7 +749,7 @@
       <b-button
         variant="primary"
         class="mr-2"
-        v-clipboard:copy="form.configBox"
+        v-clipboard:copy="form.config_box"
       >
         Copy
         <b-spinner small v-if="workflow.showSpinner" />
@@ -901,43 +831,35 @@ export default {
   data() {
     return {
       form: {
-        authEndpoint: cache.authEndPoint,
-        tokenEndpoint: cache.tokenEndpoint,
-
-        client_id: cache.client_id,
-        client_secret: cache.client_secret,
-
-        redirectUri: "",
-        scope: cache.scope,
-
-        customParameters: cache.customParameters,
-        state: cache.state || generateState(),
-
-        authCode: cache.authCode,
         access_token: cache.access_token,
-        refresh_token: cache.refresh_token,
-
         account_list: cache.account_list,
-
-        category_list: cache.category_list,
-
-        secret_key: cache.secret_key,
-        tmdb_api_key: cache.tmdb_api_key,
-        cloudflare: cache.cloudflare,
+        adult: cache.adult,
+        arcio: cache.arcio,
+        auth: cache.auth,
+        auth_code: cache.auth_code,
+        auth_endpoint: cache.auth_endpoint,
         build_interval: cache.build_interval,
         build_type: cache.build_type,
-        arcio: cache.arcio,
+        category_list: cache.category_list,
+        client_id: cache.client_id,
+        client_secret: cache.client_secret,
+        cloudflare: cache.cloudflare,
+        config_box: cache.config_box,
+        custom_parameters: cache.custom_parameters,
         prefer_mkv: cache.prefer_mkv,
         prefer_mp4: cache.prefer_mp4,
-        transcoded: cache.transcoded,
+        redirect_uri: window.location.origin,
+        refresh_token: cache.refresh_token,
+        scope: cache.scope,
+        secret_key: cache.secret_key,
         service_accounts: cache.service_accounts,
         signup: cache.signup,
+        state: cache.state || generateState(),
         subtitles: cache.subtitles,
-        auth: cache.auth,
-
+        tmdb_api_key: cache.tmdb_api_key,
+        token_endpoint: cache.token_endpoint,
+        transcoded: cache.transcoded,
         ui_config: cache.ui_config,
-
-        configBox: cache.configBox,
       },
       workflow: {
         options: [GOOGLE, ACCOUNTS, CATEGORIES, UI, EXTRAS, GENERATE],
@@ -960,22 +882,22 @@ export default {
       });
       this.form.service_accounts = sa_files;
     },
-    getAuthCode() {
+    getauth_code() {
       this.updateAllCacheValues();
 
       let query = objToFormEncoded({
         response_type: "code",
-        redirect_uri: this.form.redirectUri,
+        redirect_uri: this.form.redirect_uri,
         client_id: this.form.client_id,
         scope: this.form.scope,
         state: this.form.state,
       });
 
-      if (this.form.customParameters) {
-        query += `&${this.form.customParameters}`;
+      if (this.form.custom_parameters) {
+        query += `&${this.form.custom_parameters}`;
       }
 
-      window.location.href = `${this.form.authEndpoint}?${query}`;
+      window.location.href = `${this.form.auth_endpoint}?${query}`;
     },
     handleError(msg, workflowStateOnError = GOOGLE) {
       this.$bvToast.toast(msg, {
@@ -991,7 +913,7 @@ export default {
     },
     async requestTokens(body, workflowStateOnError) {
       this.workflow.showSpinner = true;
-      const response = await fetch(this.form.tokenEndpoint, {
+      const response = await fetch(this.form.token_endpoint, {
         method: "POST",
         headers: {
           Authorization: `Basic ${btoa(
@@ -1024,13 +946,13 @@ export default {
         this.workflow.showSpinner = false;
       }
     },
-    async tradeInAuthCode() {
+    async tradeInauth_code() {
       this.updateAllCacheValues();
 
       const body = {
         grant_type: "authorization_code",
-        redirect_uri: this.form.redirectUri,
-        code: this.form.authCode,
+        redirect_uri: this.form.redirect_uri,
+        code: this.form.auth_code,
       };
 
       const { access_token, refresh_token } = await this.requestTokens(
@@ -1038,7 +960,7 @@ export default {
         GOOGLE
       );
 
-      this.form.authCode = `(Used) ${this.form.authCode}`;
+      this.form.auth_code = `(Used) ${this.form.auth_code}`;
       this.form.access_token = access_token;
       this.form.refresh_token =
         refresh_token || "Not provided by authorization server.";
@@ -1081,11 +1003,12 @@ export default {
       this.updateAllCacheValues();
 
       this.form.category_list.push({
-        type: "Movies",
-        name: "",
+        adult: false,
+        anilist: false,
         id: "",
         language: "en",
-        anilist: false,
+        name: "",
+        type: "Movies",
       });
     },
     async removeCategories() {
@@ -1097,8 +1020,9 @@ export default {
       let config = {};
       config.access_token = this.form.access_token;
       config.account_list = this.form.account_list;
+      config.adult = this.form.adult;
       config.arcio = this.form.arcio;
-      config.auth = this.form.auth.toLowerCase() === "true" || false;
+      config.auth = this.form.auth;
       config.build_interval = parseInt(this.form.build_interval);
       config.build_type = this.form.build_type;
       config.category_list = this.form.category_list;
@@ -1109,14 +1033,14 @@ export default {
       config.secret_key = this.form.secret_key;
       config.tmdb_api_key = this.form.tmdb_api_key;
       config.token_expiry = "";
-      config.prefer_mkv = this.form.prefer_mkv.toLowerCase() == "true" || false;
-      config.prefer_mp4 = this.form.prefer_mp4.toLowerCase() == "true" || true;
-      config.transcoded = this.form.transcoded.toLowerCase() == "true" || false;
+      config.prefer_mkv = this.form.prefer_mkv;
+      config.prefer_mp4 = this.form.prefer_mp4;
+      config.transcoded = this.form.transcoded;
       config.service_accounts = this.form.service_accounts;
-      config.subtitles = this.form.subtitles.toLowerCase() == "true" || false;
-      config.signup = this.form.signup.toLowerCase() === "true" || false;
+      config.subtitles = this.form.subtitles;
+      config.signup = this.form.signup;
       config.ui_config = this.form.ui_config;
-      this.form.configBox = JSON.stringify(config, null, 4);
+      this.form.config_box = JSON.stringify(config, null, 4);
 
       this.updateAllCacheValues();
     },
@@ -1124,8 +1048,9 @@ export default {
       let config = {};
       config.access_token = this.form.access_token;
       config.account_list = this.form.account_list;
+      config.adult = this.form.adult;
       config.arcio = this.form.arcio;
-      config.auth = this.form.auth.toLowerCase() === "true" || false;
+      config.auth = this.form.auth;
       config.build_interval = parseInt(this.form.build_interval);
       config.build_type = this.form.build_type;
       config.category_list = this.form.category_list;
@@ -1136,20 +1061,20 @@ export default {
       config.secret_key = this.form.secret_key;
       config.tmdb_api_key = this.form.tmdb_api_key;
       config.token_expiry = "";
-      config.prefer_mkv = this.form.prefer_mkv.toLowerCase() == "true" || false;
-      config.prefer_mp4 = this.form.prefer_mp4.toLowerCase() == "true" || true;
-      config.transcoded = this.form.transcoded.toLowerCase() == "true" || false;
+      config.prefer_mkv = this.form.prefer_mkv;
+      config.prefer_mp4 = this.form.prefer_mp4;
+      config.transcoded = this.form.transcoded;
       config.service_accounts = this.form.service_accounts;
-      config.subtitles = this.form.subtitles.toLowerCase() == "true" || false;
-      config.signup = this.form.signup.toLowerCase() === "true" || false;
+      config.subtitles = this.form.subtitles;
+      config.signup = this.form.signup;
       config.ui_config = this.form.ui_config;
-      this.form.configBox = JSON.stringify(config);
+      this.form.config_box = JSON.stringify(config);
 
       this.updateAllCacheValues();
     },
     async downloadToFile() {
       const a = document.createElement("a");
-      const file = new Blob([this.form.configBox], { type: "text/plain" });
+      const file = new Blob([this.form.config_box], { type: "text/plain" });
 
       a.href = URL.createObjectURL(file);
       a.download = "config.json";
@@ -1169,7 +1094,7 @@ export default {
         var lines = reader.result;
         var config = JSON.parse(lines);
         let newConfig = {};
-        this.form.configBox = lines;
+        this.form.config_box = lines;
         for (var key in config) {
           eval("newConfig." + key + "= config." + key);
         }
@@ -1181,28 +1106,37 @@ export default {
       this.updateAllCacheValues();
     },
     updateAllCacheValues() {
-      cache.authEndPoint = this.form.authEndpoint;
-      cache.tokenEndpoint = this.form.tokenEndpoint;
+      cache.access_token = this.form.access_token;
+      cache.account_list = this.form.account_list;
+      cache.adult = this.form.adult;
+      cache.arcio = this.form.arcio;
+      cache.auth = this.form.auth;
+      cache.auth_code = this.form.auth_code;
+      cache.auth_endpoint = this.form.auth_endpoint;
+      cache.config_box = this.form.config_box;
+      cache.build_interval = parseInt(this.form.build_interval);
+      cache.build_type = this.form.build_type;
+      cache.category_list = this.form.category_list;
       cache.client_id = this.form.client_id;
       cache.client_secret = this.form.client_secret;
-      cache.scope = this.form.scope;
-      cache.customParameters = this.form.customParameters;
-      cache.state = this.form.state;
-      cache.authCode = this.form.authCode;
-      cache.access_token = this.form.access_token;
+      cache.cloudflare = this.form.cloudflare;
+      cache.custom_parameters = this.form.custom_parameters;
+      cache.prefer_mkv = this.form.prefer_mkv;
+      cache.prefer_mp4 = this.form.prefer_mp4;
       cache.refresh_token = this.form.refresh_token;
-      cache.account_list = this.form.account_list;
-      cache.category_list = this.form.category_list;
+      cache.scope = this.form.scope;
       cache.secret_key = this.form.secret_key;
       cache.service_accounts = this.form.service_accounts;
+      cache.signup = this.form.signup;
+      cache.subtitles = this.form.subtitles;
       cache.tmdb_api_key = this.form.tmdb_api_key;
+      cache.token_endpoint = this.form.token_endpoint;
+      cache.token_expiry = "";
+      cache.transcoded = this.form.transcoded;
       cache.ui_config = this.form.ui_config;
-      cache.configBox = this.form.configBox;
     },
   },
   mounted() {
-    this.form.redirectUri = window.location.origin;
-
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const state = params.get("state");
@@ -1225,8 +1159,8 @@ export default {
         return;
       }
 
-      this.form.authCode = code;
-      this.tradeInAuthCode();
+      this.form.auth_code = code;
+      this.tradeInauth_code();
       this.workflow.state = GOOGLE;
     }
 
@@ -1238,5 +1172,9 @@ export default {
 <style>
 body {
   padding: 2vh 0;
+}
+.switch-css {
+  display: flex;
+  align-items: center;
 }
 </style>

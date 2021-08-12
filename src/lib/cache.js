@@ -1,20 +1,20 @@
 module.exports = {
-  get authEndPoint() {
-    return window.sessionStorage.getItem("authEndpoint") || "";
+  get auth_endpoint() {
+    return window.sessionStorage.getItem("auth_endpoint") || "";
   },
-  set authEndPoint(value) {
-    window.sessionStorage.setItem("authEndpoint", "");
+  set auth_endpoint(value) {
+    window.sessionStorage.setItem("auth_endpoint", "");
   },
 
-  get tokenEndpoint() {
-    return window.sessionStorage.getItem("tokenEndpoint") || "";
+  get token_endpoint() {
+    return window.sessionStorage.getItem("token_endpoint") || "";
   },
-  set tokenEndpoint(value) {
-    window.sessionStorage.setItem("tokenEndpoint", value);
+  set token_endpoint(value) {
+    window.sessionStorage.setItem("token_endpoint", value);
   },
 
   get auth() {
-    return window.sessionStorage.getItem("auth") || "True";
+    return window.sessionStorage.getItem("auth") || true;
   },
   set auth(value) {
     window.sessionStorage.setItem("auth", value);
@@ -41,6 +41,13 @@ module.exports = {
     window.sessionStorage.setItem("client_secret", value);
   },
 
+  get adult() {
+    return window.sessionStorage.getItem("adult") || false;
+  },
+  set adult(value) {
+    window.sessionStorage.setItem("adult", value);
+  },
+
   get cloudflare() {
     return window.sessionStorage.getItem("cloudflare") || "";
   },
@@ -49,7 +56,7 @@ module.exports = {
   },
 
   get build_interval() {
-    return parseInt(window.sessionStorage.getItem("build_interval")) || 120;
+    return parseInt(window.sessionStorage.getItem("build_interval")) || 360;
   },
   set build_interval(value) {
     window.sessionStorage.setItem("build_interval", toString(value));
@@ -62,47 +69,54 @@ module.exports = {
     window.sessionStorage.setItem("build_type", value);
   },
 
+  get language() {
+    return window.sessionStorage.getItem("language") || "en";
+  },
+  set language(value) {
+    window.sessionStorage.setItem("language", value);
+  },
+
   get prefer_mkv() {
-    return window.sessionStorage.getItem("prefer_mkv") || "False";
+    return window.sessionStorage.getItem("prefer_mkv") || false;
   },
   set prefer_mkv(value) {
     window.sessionStorage.setItem("prefer_mkv", value);
   },
 
   get prefer_mp4() {
-    return window.sessionStorage.getItem("prefer_mp4") || "False";
+    return window.sessionStorage.getItem("prefer_mp4") || true;
   },
   set prefer_mp4(value) {
     window.sessionStorage.setItem("prefer_mp4", value);
   },
 
   get transcoded() {
-    return window.sessionStorage.getItem("transcoded") || "False";
+    return window.sessionStorage.getItem("transcoded") || true;
   },
   set transcoded(value) {
     window.sessionStorage.setItem("transcoded", value);
   },
 
   get signup() {
-    return window.sessionStorage.getItem("signup") || "False";
+    return window.sessionStorage.getItem("signup") || false;
   },
   set signup(value) {
     window.sessionStorage.setItem("signup", value);
   },
 
   get subtitles() {
-    return window.sessionStorage.getItem("subtitles") || "False";
+    return window.sessionStorage.getItem("subtitles") || false;
   },
   set subtitles(value) {
     window.sessionStorage.setItem("subtitles", value);
   },
 
   get ui_config() {
-    var ui_config = JSON.parse(window.sessionStorage.getItem("ui_config")) || {};
-    if (!ui_config.range) {
-      ui_config.range = "16";
+    var config = JSON.parse(window.sessionStorage.getItem("ui_config")) || {};
+    if (!config.custom_button) {
+      config.custom_button = {};
     }
-    return ui_config;
+    return config;
   },
   set ui_config(value) {
     window.sessionStorage.setItem("ui_config", JSON.stringify(value));
@@ -115,11 +129,11 @@ module.exports = {
     window.sessionStorage.setItem("scope", value);
   },
 
-  get customParameters() {
-    return window.sessionStorage.getItem("customParameters") || "";
+  get custom_parameters() {
+    return window.sessionStorage.getItem("custom_parameters") || "";
   },
-  set customParameters(value) {
-    window.sessionStorage.setItem("customParameters", value);
+  set custom_parameters(value) {
+    window.sessionStorage.setItem("custom_parameters", value);
   },
 
   get state() {
@@ -129,11 +143,11 @@ module.exports = {
     window.sessionStorage.setItem("state", value);
   },
 
-  get authCode() {
-    return window.sessionStorage.getItem("authCode") || "";
+  get auth_code() {
+    return window.sessionStorage.getItem("auth_code") || "";
   },
-  set authCode(value) {
-    window.sessionStorage.setItem("authCode", value);
+  set auth_code(value) {
+    window.sessionStorage.setItem("auth_code", value);
   },
 
   get access_token() {
@@ -185,10 +199,10 @@ module.exports = {
     window.sessionStorage.setItem("tmdb_api_key", value);
   },
 
-  get configBox() {
-    return window.sessionStorage.getItem("configBox") || "";
+  get config_box() {
+    return window.sessionStorage.getItem("config_box") || "";
   },
-  set configBox(value) {
-    window.sessionStorage.setItem("configBox", value);
+  set config_box(value) {
+    window.sessionStorage.setItem("config_box", value);
   },
 };
