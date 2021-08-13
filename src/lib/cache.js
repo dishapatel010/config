@@ -48,6 +48,20 @@ module.exports = {
     window.sessionStorage.setItem("adult", value);
   },
 
+  get fetch_assets() {
+    return window.sessionStorage.getItem("fetch_assets") || false;
+  },
+  set fetch_assets(value) {
+    window.sessionStorage.setItem("fetch_assets", value);
+  },
+
+  get remove_duplicates() {
+    return window.sessionStorage.getItem("remove_duplicates") || false;
+  },
+  set remove_duplicates(value) {
+    window.sessionStorage.setItem("remove_duplicates", value);
+  },
+
   get cloudflare() {
     return window.sessionStorage.getItem("cloudflare") || "";
   },
@@ -104,11 +118,11 @@ module.exports = {
     window.sessionStorage.setItem("signup", value);
   },
 
-  get subtitles() {
-    return window.sessionStorage.getItem("subtitles") || false;
+  get remove_duplicates() {
+    return window.sessionStorage.getItem("remove_duplicates") || false;
   },
-  set subtitles(value) {
-    window.sessionStorage.setItem("subtitles", value);
+  set remove_duplicates(value) {
+    window.sessionStorage.setItem("remove_duplicates", value);
   },
 
   get ui_config() {
