@@ -475,8 +475,8 @@
           </b-form-group>
         </b-col>
       </b-row>
-      <b-row lg="4">
-        <b-col>
+      <b-row>
+        <b-col lg="6">
           <b-form-group
             id="custom-button-text-group"
             label="Custom Button Text"
@@ -491,7 +491,7 @@
             </b-input-group>
           </b-form-group>
         </b-col>
-        <b-col lg="4">
+        <b-col lg="6">
           <b-form-group
             id="custom-button-url-group"
             label="Custom Button URL"
@@ -506,6 +506,8 @@
             </b-input-group>
           </b-form-group>
         </b-col>
+      </b-row>
+      <b-row>
         <b-col lg="2">
           <b-form-group id="range-group" label="Range" label-for="range-input">
             <b-input-group>
@@ -524,6 +526,15 @@
             switch
           >
             Icon On Nav
+          </b-form-checkbox>
+        </b-col>
+        <b-col lg="2" class="switch-css">
+          <b-form-checkbox
+            v-model="form.ui_config.hide_news"
+            name="hide-news-nav-switch"
+            switch
+          >
+            Hide News
           </b-form-checkbox>
         </b-col>
       </b-row>
@@ -747,6 +758,19 @@
           </b-form-checkbox>
         </b-col>
       </b-row>
+      <br />
+      <b-row>
+        <b-col lg="3" class="switch-css">
+          <b-form-checkbox
+            class="no__overflow"
+            v-model="form.remove_no_poster"
+            name="remove-no-poster-switch"
+            switch
+          >
+            Remove No Posters
+          </b-form-checkbox>
+        </b-col>
+      </b-row>
     </div>
 
     <b-row v-if="isGenerate">
@@ -884,12 +908,12 @@ export default {
         redirect_uri: window.location.origin,
         refresh_token: cache.refresh_token,
         remove_duplicates: cache.remove_duplicates,
+        remove_no_poster: cache.remove_no_poster,
         scope: cache.scope,
         secret_key: cache.secret_key,
         service_accounts: cache.service_accounts,
         signup: cache.signup,
         state: cache.state || generateState(),
-        remove_duplicates: cache.remove_duplicates,
         tmdb_api_key: cache.tmdb_api_key,
         token_endpoint: cache.token_endpoint,
         transcoded: cache.transcoded,
@@ -1066,6 +1090,7 @@ export default {
       config.fetch_assets = this.form.fetch_assets;
       config.refresh_token = this.form.refresh_token;
       config.remove_duplicates = this.form.remove_duplicates;
+      config.remove_no_poster = this.form.remove_no_poster;
       config.secret_key = this.form.secret_key;
       config.tmdb_api_key = this.form.tmdb_api_key;
       config.token_expiry = "";
@@ -1073,7 +1098,6 @@ export default {
       config.prefer_mp4 = this.form.prefer_mp4;
       config.transcoded = this.form.transcoded;
       config.service_accounts = this.form.service_accounts;
-      config.remove_duplicates = this.form.remove_duplicates;
       config.signup = this.form.signup;
       config.ui_config = this.form.ui_config;
       this.form.config_box = JSON.stringify(config, null, 4);
@@ -1096,6 +1120,7 @@ export default {
       config.fetch_assets = this.form.fetch_assets;
       config.refresh_token = this.form.refresh_token;
       config.remove_duplicates = this.form.remove_duplicates;
+      config.remove_no_poster = this.form.remove_no_poster;
       config.secret_key = this.form.secret_key;
       config.tmdb_api_key = this.form.tmdb_api_key;
       config.token_expiry = "";
@@ -1103,7 +1128,6 @@ export default {
       config.prefer_mp4 = this.form.prefer_mp4;
       config.transcoded = this.form.transcoded;
       config.service_accounts = this.form.service_accounts;
-      config.remove_duplicates = this.form.remove_duplicates;
       config.signup = this.form.signup;
       config.ui_config = this.form.ui_config;
       this.form.config_box = JSON.stringify(config);
@@ -1164,12 +1188,12 @@ export default {
       cache.prefer_mp4 = this.form.prefer_mp4;
       cache.refresh_token = this.form.refresh_token;
       cache.remove_duplicates = this.form.remove_duplicates;
+      cache.remove_no_poster = this.form.remove_no_poster;
       cache.scope = this.form.scope;
       cache.secret_key = this.form.secret_key;
       cache.service_accounts = this.form.service_accounts;
       cache.signup = this.form.signup;
       cache.state = this.form.state;
-      cache.remove_duplicates = this.form.remove_duplicates;
       cache.tmdb_api_key = this.form.tmdb_api_key;
       cache.token_endpoint = this.form.token_endpoint;
       cache.token_expiry = "";

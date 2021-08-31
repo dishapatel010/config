@@ -62,6 +62,13 @@ module.exports = {
     window.sessionStorage.setItem("remove_duplicates", value);
   },
 
+  get remove_no_poster() {
+    return window.sessionStorage.getItem("remove_no_poster") || false;
+  },
+  set remove_no_poster(value) {
+    window.sessionStorage.setItem("remove_no_poster", value);
+  },
+
   get cloudflare() {
     return window.sessionStorage.getItem("cloudflare") || "";
   },
